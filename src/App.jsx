@@ -1,20 +1,23 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import { Routes, Route } from 'react-router-dom'
+import { Toaster } from 'react-hot-toast'
+import MenuBar from './Components/MenuBar'
+import Home from './Components/Pages/Home'
+import StateDetails from './Components/Pages/StateDetails'
+import PaymentsTable from './Components/Pages/PaymentsTable'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
-      <button className="btn">Button</button>
-      <button className="btn btn-neutral">Neutral</button>
-      <button className="btn btn-primary">Primary</button>
-      <button className="btn btn-secondary">Secondary</button>
-      <button className="btn btn-accent">Accent</button>
-      <button className="btn btn-ghost">Ghost</button>
-      <button className="btn btn-link">Link</button>
+      <Toaster />
+      <MenuBar />
+      <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/state-details" element={<StateDetails />} />
+          <Route path="/payments" element={<PaymentsTable />} />
+       </Routes>
     </>
   )
 }
