@@ -97,7 +97,7 @@ const CurrentStatsComponent = () => {
 };
 
 const PaymentsStats = () => {
-    const paymentStatsItem =  {'payed': 21, 'unpayed': 4};
+    const paymentStatsItem =  {'payed': 21, 'unpayed': 41};
     
     return (
         <div className="stats shadow">
