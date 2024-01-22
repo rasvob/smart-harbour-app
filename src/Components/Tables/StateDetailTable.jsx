@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { PenIcon, PenSquareIcon } from "../Icons/SvgIcons";
 
 const milisecondsToHoursAndMinutes = (ms) => {
     const hours = Math.floor(ms / 1000 / 60 / 60);
@@ -17,15 +18,27 @@ const prepareViewData = (data) => {
     });
 };
 
-const StateDetailTable = ({data}) => {
-    const [viewData, setViewData] = useState(prepareViewData(data));
+const PaymentCheckbox = ({id, checked, onChange}) => {
+    return (
+        <input type="checkbox" checked={checked} onChange={onChange} id={id} className={`checkbox ${checked ? "checkbox-success" : "checkbox-error"}`} />
+    );
+};
+
+const StateDetailTable = ({data, setPaymentStatus, setBoatNumber}) => {
+    const editBoatNumber = (id) => {
+        const newBoatNumber = prompt("Zadejte nové číslo lodě:");
+        if (newBoatNumber !== null) {
+            setBoatNumber(id, newBoatNumber);
+        }
+    };
+
 
     return (
         <div className="overflow-x-auto">
             <table className="table table-lg w-full table-zebra-zebra">
                 <thead className="text-lg">
                     <tr>
-                        <th className="text-left">V přístavu</th>
+                        <th className="text-center">V přístavu</th>
                         <th className="text-left">Čas příjezdu</th>
                         <th className="text-left">Čas odjezdu</th>
                         <th className="text-left">Doba stání</th>
@@ -35,16 +48,28 @@ const StateDetailTable = ({data}) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {viewData.map((item, index) => {
+                    {prepareViewData(data).map((item, index) => {
                         return (
-                            <tr className="hover" key={index}>
-                                <td>{item.inHarbour ? "Ano": "Ne"} <div className="circle-icon bg-green-50 w-4 h-4"></div> </td>
+                            <tr className="hover group" key={index}>
+                                <td>
+                                    <div className={`circle-icon ${item.inHarbour ? "bg-success" : "bg-error"} w-4 h-4 mx-auto`}></div>
+                                </td>
                                 <td>{item.inflowTime}</td>
                                 <td>{item.outflowTime}</td>
                                 <td>{item.timeInHarbour}</td>
-                                <td>{item.boatNumber}</td>
+                                <td className="lg:flex lg:place-content-between lg:items-center lg:flex-wrap">
+                                    <span className={`${item.boatNumber && item.boatNumber.includes('?') ? "font-bold text-error" : ""}`}>{item.boatNumber}</span>
+                                    <span>
+                                        <button className="btn btn-sm btn-outline btn-info" onClick={() => editBoatNumber(item.id)}><PenSquareIcon /></button>
+                                    </span>
+                                    
+                                </td>
                                 <td>{item.boatLength}</td>
-                                <td>{item.payedState}</td>
+                                <td>
+                                    {
+                                        item.payedState === "Neplatí" ? item.payedState : <PaymentCheckbox checked={item.payedState === 'Ano'} onChange={(e) => setPaymentStatus(item.id)} />
+                                    }
+                                </td>
                             </tr>
                         );
                     })}
