@@ -2,3 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 @tailwindcss/typography;
+
+.circle-icon {
+  border-radius: 50%;
+}
