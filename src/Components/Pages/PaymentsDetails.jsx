@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useBoatStore } from "../../Data/DataStore";
-import { StateDetailTable, prepareViewData } from "../Tables/StateDetailTable";
+import { StateDetailTable } from "../Tables/StateDetailTable";
 
 const PaymentsDetails = () => {
     const data = useBoatStore((state) => state.boatData);

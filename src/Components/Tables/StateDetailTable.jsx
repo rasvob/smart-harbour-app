@@ -1,22 +1,22 @@
 import { useState, useEffect, useRef } from "react";
 import { PenIcon, PenSquareIcon } from "../Icons/SvgIcons";
 
-const milisecondsToHoursAndMinutes = (ms) => {
-    const hours = Math.floor(ms / 1000 / 60 / 60);
-    const minutes = Math.floor(ms / 1000 / 60) - (hours * 60);
+// const milisecondsToHoursAndMinutes = (ms) => {
+//     const hours = Math.floor(ms / 1000 / 60 / 60);
+//     const minutes = Math.floor(ms / 1000 / 60) - (hours * 60);
 
-    return `${hours}h ${minutes}m`;
-};
+//     return `${hours}h ${minutes}m`;
+// };
 
-const prepareViewData = (data) => {
-    return data.map((item) => {
-        return {
-            ...item,
-            'inHarbour': item.outflowTime === null,
-            'timeInHarbour': item.outflowTime === null ? milisecondsToHoursAndMinutes(new Date() - new Date(item.inflowTime)) : milisecondsToHoursAndMinutes(new Date(item.outflowTime) - new Date(item.inflowTime)),
-        };
-    });
-};
+// const prepareViewData = (data) => {
+//     return data.map((item) => {
+//         return {
+//             ...item,
+//             'inHarbour': item.outflowTime === null,
+//             'timeInHarbour': item.outflowTime === null ? milisecondsToHoursAndMinutes(new Date() - new Date(item.inflowTime)) : milisecondsToHoursAndMinutes(new Date(item.outflowTime) - new Date(item.inflowTime)),
+//         };
+//     });
+// };
 
 const PaymentCheckbox = ({id, checked, onChange}) => {
     return (
@@ -24,9 +24,9 @@ const PaymentCheckbox = ({id, checked, onChange}) => {
     );
 };
 
-const StateDetailTable = ({data, setPaymentStatus, setBoatNumber, getBoatById}) => {
-    const [selectedId, setSelectedId] = useState(null);
-    const [newBoatNumber, setNewBoatNumber] = useState(null);
+const StateDetailTable = ({data, setPaymentStatus, setBoatNumber, getBoatById, getTableViewData, filters, getFilteredTableViewData}) => {
+    const [selectedId, setSelectedId] = useState(0);
+    const [newBoatNumber, setNewBoatNumber] = useState(1);
     const editBoatNumberModalRef = useRef(null);
 
     const editBoatNumber = (id) => {
@@ -34,10 +34,6 @@ const StateDetailTable = ({data, setPaymentStatus, setBoatNumber, getBoatById}) 
         const currentBoatNumber = getBoatById(id).boatNumber || "";
         setNewBoatNumber(currentBoatNumber);
         editBoatNumberModalRef.current.showModal();
-        console.log(id, currentBoatNumber);
-        // if (newBoatNumber !== null) {
-        //     setBoatNumber(id, newBoatNumber);
-        // }
     };
 
     const submitBoatNumberChange = (e) => {
@@ -45,7 +41,6 @@ const StateDetailTable = ({data, setPaymentStatus, setBoatNumber, getBoatById}) 
         if (newBoatNumber !== null) {
             setBoatNumber(selectedId, newBoatNumber);
             editBoatNumberModalRef.current.close();
-            console.log('####', selectedId, newBoatNumber);
         }
     };
 
@@ -64,7 +59,7 @@ const StateDetailTable = ({data, setPaymentStatus, setBoatNumber, getBoatById}) 
                     </tr>
                 </thead>
                 <tbody>
-                    {prepareViewData(data).map((item, index) => {
+                    {getFilteredTableViewData(filters).map((item, index) => {
                         return (
                             <tr className="hover group" key={index}>
                                 <td>
@@ -115,4 +110,4 @@ const StateDetailTable = ({data, setPaymentStatus, setBoatNumber, getBoatById}) 
     );
 };
 
-export { StateDetailTable, prepareViewData };
+export { StateDetailTable };
