@@ -1,25 +1,5 @@
 import { create } from "zustand";
 
-class Filter {
-    constructor(attribute, type, label, predicate, options) {
-        this.attribute = attribute;
-        this.type = type;
-        this.label = label;
-        this.predicate = predicate;
-        this.options = options;
-    }
-}
-
-export const stateDetailsFilter = new Filter(
-    'inHarbour',
-    'checkbox',
-    'V přístavu',
-    (item) => item.outflowTime === null,
-    [
-        {'value': true, 'predicate': (item) => this.predicate(item), 'label': 'Ano'},
-        {'value': true, 'predicate': (item) => !this.predicate(item), 'label': 'Ne'},
-    ],
-);
 
 const stateDetailsFilterTemplates = [
     {
@@ -28,52 +8,52 @@ const stateDetailsFilterTemplates = [
         'label': 'V přístavu',
         'predicate': (item) => item.outflowTime === null,
         'options': [
-            {'value': true, 'predicate': (item) => this.predicate(item), 'label': 'Ano'},
-            {'value': true, 'predicate': (item) => !this.predicate(item), 'label': 'Ne'},
+            {'value': true, 'predicate': (item) => item.outflowTime === null, 'label': 'Ano'},
+            {'value': true, 'predicate': (item) => item.outflowTime !== null, 'label': 'Ne'},
         ],
     },
-    // {
-    //     'attribute': 'boatNumber',
-    //     'type': 'checkbox',
-    //     'label': 'Číslo lodě',
-    //     'predicate': (item) => item.boatNumber && !item.boatNumber.includes('?'),
-    //     'options': [
-    //         {'value': true, 'predicate': (item) => this.predicate(item), 'label': 'Rozpoznané'},
-    //         {'value': true, 'predicate': (item) => !this.predicate(item), 'label': 'Nerozpoznané'},
-    //     ],
-    // },
-    // {
-    //     'attribute': 'payedState',
-    //     'type': 'checkbox',
-    //     'label': 'Zaplaceno',
-    //     'predicate': (item) => item.payedState === 'Ano',
-    //     'options': [
-    //         {'value': true, 'predicate': (item) => item.payedState === 'Ano', 'label': 'Ano'},
-    //         {'value': true, 'predicate': (item) => item.payedState === 'Ne', 'label': 'Ne'},
-    //         {'value': true, 'predicate': (item) => item.payedState === 'Neplatí', 'label': 'Neplatí'},
-    //     ],
-    // },
-    // {
-    //     'attribute': 'outflowTime',
-    //     'type': 'checkbox',
-    //     'label': 'Doba stání',
-    //     'predicate': (item) => harbourTimeToHours(item.inflowTime, item.outflowTime) < 4.0,
-    //     'options': [
-    //         {'value': true, 'predicate': (item) => this.predicate(item), 'label': 'Do 4 hodin'},
-    //         {'value': true, 'predicate': (item) => (harbourTimeToHours(item.inflowTime, item.outflowTime) >= 4.0 && harbourTimeToHours(item.inflowTime, item.outflowTime) <= 24.0), 'label': 'Nad 4 hodiny'},
-    //         {'value': true, 'predicate': (item) => harbourTimeToHours(item.inflowTime, item.outflowTime) > 24.0, 'label': 'Více dní'},
-    //     ],
-    // },
-    // {
-    //     'attribute': 'boatLength',
-    //     'type': 'checkbox',
-    //     'label': 'Délka lodi',
-    //     'predicate': (item) => item.boatLength === 'do 8 m',
-    //     'options': [
-    //         {'value': true, 'predicate': (item) => this.predicate(item), 'label': 'Do 8 metrů'},
-    //         {'value': true, 'predicate': (item) => !this.predicate(item), 'label': 'Nad 4 hodiny'},
-    //     ],
-    // },
+    {
+        'attribute': 'boatNumber',
+        'type': 'checkbox',
+        'label': 'Číslo lodě',
+        'predicate': (item) => item.boatNumber && !item.boatNumber.includes('?'),
+        'options': [
+            {'value': true, 'predicate': (item) => item.boatNumber && !item.boatNumber.includes('?'), 'label': 'Rozpoznané'},
+            {'value': true, 'predicate': (item) => !(item.boatNumber && !item.boatNumber.includes('?')), 'label': 'Nerozpoznané'},
+        ],
+    },
+    {
+        'attribute': 'payedState',
+        'type': 'checkbox',
+        'label': 'Zaplaceno',
+        'predicate': (item) => item.payedState === 'Ano',
+        'options': [
+            {'value': true, 'predicate': (item) => item.payedState === 'Ano', 'label': 'Ano'},
+            {'value': true, 'predicate': (item) => item.payedState === 'Ne', 'label': 'Ne'},
+            {'value': true, 'predicate': (item) => item.payedState === 'Neplatí', 'label': 'Neplatí'},
+        ],
+    },
+    {
+        'attribute': 'outflowTime',
+        'type': 'checkbox',
+        'label': 'Doba stání',
+        'predicate': (item) => harbourTimeToHours(item.inflowTime, item.outflowTime) < 4.0,
+        'options': [
+            {'value': true, 'predicate': (item) => harbourTimeToHours(item.inflowTime, item.outflowTime) < 4.0, 'label': 'Do 4 hodin'},
+            {'value': true, 'predicate': (item) => (harbourTimeToHours(item.inflowTime, item.outflowTime) >= 4.0 && harbourTimeToHours(item.inflowTime, item.outflowTime) <= 24.0), 'label': 'Nad 4 hodiny'},
+            {'value': true, 'predicate': (item) => harbourTimeToHours(item.inflowTime, item.outflowTime) > 24.0, 'label': 'Více dní'},
+        ],
+    },
+    {
+        'attribute': 'boatLength',
+        'type': 'checkbox',
+        'label': 'Délka lodi',
+        'predicate': (item) => item.boatLength === 'do 8 m',
+        'options': [
+            {'value': true, 'predicate': (item) => item.boatLength === 'do 8 m', 'label': 'Do 8 metrů'},
+            {'value': true, 'predicate': (item) => item.boatLength === 'nad 8 m', 'label': 'Nad 4 hodiny'},
+        ],
+    },
 ];
 
 function harbourTimeToHours(inflowTime, outflowTime) {

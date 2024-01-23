@@ -68,8 +68,7 @@ export const useBoatStore = create((set, get) => ({
             filteredData = filteredData.filter((item) => {
                 for (let optionIndex = 0; optionIndex < filter.options.length; optionIndex++) {
                     const option = filter.options[optionIndex];
-                    // if (option.value && option.predicate(item)) {
-                    if (option.value) {
+                    if (option.value && option.predicate(item)) {
                         return true;
                     }
                 }
