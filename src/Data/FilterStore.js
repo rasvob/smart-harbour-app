@@ -1,5 +1,26 @@
 import { create } from "zustand";
 
+class Filter {
+    constructor(attribute, type, label, predicate, options) {
+        this.attribute = attribute;
+        this.type = type;
+        this.label = label;
+        this.predicate = predicate;
+        this.options = options;
+    }
+}
+
+export const stateDetailsFilter = new Filter(
+    'inHarbour',
+    'checkbox',
+    'V přístavu',
+    (item) => item.outflowTime === null,
+    [
+        {'value': true, 'predicate': (item) => this.predicate(item), 'label': 'Ano'},
+        {'value': true, 'predicate': (item) => !this.predicate(item), 'label': 'Ne'},
+    ],
+);
+
 const stateDetailsFilterTemplates = [
     {
         'attribute': 'inHarbour',
