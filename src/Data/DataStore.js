@@ -43,4 +43,8 @@ export const useBoatStore = create((set) => ({
             return { boatData: newData };
         });
     },
+    getBoatById: (id) => {
+        const boat = repeatedData.find((boat) => boat.id === id);
+        return boat;
+    },
 }));

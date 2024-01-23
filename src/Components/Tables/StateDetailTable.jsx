@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { PenIcon, PenSquareIcon } from "../Icons/SvgIcons";
 
 const milisecondsToHoursAndMinutes = (ms) => {
@@ -24,14 +24,30 @@ const PaymentCheckbox = ({id, checked, onChange}) => {
     );
 };
 
-const StateDetailTable = ({data, setPaymentStatus, setBoatNumber}) => {
+const StateDetailTable = ({data, setPaymentStatus, setBoatNumber, getBoatById}) => {
+    const [selectedId, setSelectedId] = useState(null);
+    const [newBoatNumber, setNewBoatNumber] = useState(null);
+    const editBoatNumberModalRef = useRef(null);
+
     const editBoatNumber = (id) => {
-        const newBoatNumber = prompt("Zadejte nové číslo lodě:");
-        if (newBoatNumber !== null) {
-            setBoatNumber(id, newBoatNumber);
-        }
+        setSelectedId(id);
+        const currentBoatNumber = getBoatById(id).boatNumber || "";
+        setNewBoatNumber(currentBoatNumber);
+        editBoatNumberModalRef.current.showModal();
+        console.log(id, currentBoatNumber);
+        // if (newBoatNumber !== null) {
+        //     setBoatNumber(id, newBoatNumber);
+        // }
     };
 
+    const submitBoatNumberChange = (e) => {
+        e.preventDefault();
+        if (newBoatNumber !== null) {
+            setBoatNumber(selectedId, newBoatNumber);
+            editBoatNumberModalRef.current.close();
+            console.log('####', selectedId, newBoatNumber);
+        }
+    };
 
     return (
         <div className="overflow-x-auto">
@@ -59,10 +75,8 @@ const StateDetailTable = ({data, setPaymentStatus, setBoatNumber}) => {
                                 <td>{item.timeInHarbour}</td>
                                 <td className="lg:flex lg:place-content-between lg:items-center lg:flex-wrap">
                                     <span className={`${item.boatNumber && item.boatNumber.includes('?') ? "font-bold text-error" : ""}`}>{item.boatNumber}</span>
-                                    <span>
-                                        <button className="btn btn-sm btn-outline btn-info" onClick={() => editBoatNumber(item.id)}><PenSquareIcon /></button>
-                                    </span>
-                                    
+                                    {/* {item.boatNumber === null || item.boatNumber.includes('?') ? <button className="btn btn-sm btn-outline btn-info" onClick={() => editBoatNumber(item.id)}><PenSquareIcon /></button> : null} */}
+                                    <button className="btn btn-sm btn-outline btn-info" onClick={() => editBoatNumber(item.id)}><PenSquareIcon /></button>
                                 </td>
                                 <td>{item.boatLength}</td>
                                 <td>
@@ -75,6 +89,28 @@ const StateDetailTable = ({data, setPaymentStatus, setBoatNumber}) => {
                     })}
                 </tbody>
             </table>
+
+            <dialog id="editBoatNumberModal" className="modal" ref={editBoatNumberModalRef}>
+                <div className="modal-box">
+                    <form method="dialog">
+                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                    </form>
+                    <h3 className="font-bold text-lg">Current boat number: {selectedId && getBoatById(selectedId).boatNumber}</h3>
+                    
+                    <form onSubmit={submitBoatNumberChange} >
+                    <label className="form-control w-full max-w-xs">
+                        <div className="label">
+                            <span className="label-text">Change boat number</span>
+                        </div>
+                        <input type="text" placeholder="e.g. 4P5 456 - P" className="input input-bordered w-full max-w-xs" value={newBoatNumber} onChange={(e) => setNewBoatNumber(e.target.value)} />
+                    </label>
+                    <button className="btn btn-success text-white mt-4" type="submit">Submit</button>
+                    </form>
+                </div>
+                {/* <form method="dialog" className="modal-backdrop">
+                    <button>Close</button>
+                </form> */}
+            </dialog>
         </div>
     );
 };
