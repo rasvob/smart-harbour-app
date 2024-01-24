@@ -1,6 +1,5 @@
 import { create } from "zustand";
 
-
 const stateDetailsFilterTemplates = [
     {
         'attribute': 'inHarbour',
@@ -56,6 +55,31 @@ const stateDetailsFilterTemplates = [
     },
 ];
 
+const paymentDetailsFilterTemplates = [
+    {
+        'attribute': 'boatNumber',
+        'type': 'checkbox',
+        'label': 'Číslo lodě',
+        'predicate': (item) => item.boatNumber && !item.boatNumber.includes('?'),
+        'options': [
+            {'value': true, 'predicate': (item) => item.boatNumber && !item.boatNumber.includes('?'), 'label': 'Rozpoznané'},
+            {'value': true, 'predicate': (item) => !(item.boatNumber && !item.boatNumber.includes('?')), 'label': 'Nerozpoznané'},
+        ],
+    },
+    {
+        'attribute': 'payedState',
+        'type': 'checkbox',
+        'label': 'Zaplaceno',
+        'predicate': (item) => item.payedState === 'Ano',
+        'options': [
+            {'value': true, 'predicate': (item) => item.payedState === 'Ano', 'label': 'Ano'},
+            {'value': true, 'predicate': (item) => item.payedState === 'Ne', 'label': 'Ne'},
+            {'value': true, 'predicate': (item) => item.payedState === 'Neplatí', 'label': 'Neplatí'},
+        ],
+    },
+];
+
+
 function harbourTimeToHours(inflowTime, outflowTime) {
     if (outflowTime === null) {
         return (new Date() - new Date(inflowTime)) / 1000 / 60 / 60;
@@ -69,7 +93,30 @@ export const useStateDetailsFilterStore = create((set, get) => ({
     setOptionValue: (attribute, optionLabel, value) => {
         set((state) => {
             const newFilters = [...state.filters];
-            console.log(newFilters, attribute, optionLabel, value);
+            const selectedAttribute = newFilters.find((filter) => filter.attribute === attribute);
+            const optionIndex = selectedAttribute.options.find((option) => option.label === optionLabel);
+            optionIndex.value = value;
+            return { filters: newFilters };
+        });
+    },
+    resetFilters: () => {
+        set((state) => {
+            const newFilters = [...state.filters];
+            newFilters.forEach((filter) => {
+                filter.options.forEach((option) => {
+                    option.value = true;
+                });
+            });
+            return { filters: newFilters };
+        });
+    },
+}));
+
+export const usePaymentDetailsFilterStore = create((set, get) => ({
+    filters: paymentDetailsFilterTemplates,
+    setOptionValue: (attribute, optionLabel, value) => {
+        set((state) => {
+            const newFilters = [...state.filters];
             const selectedAttribute = newFilters.find((filter) => filter.attribute === attribute);
             const optionIndex = selectedAttribute.options.find((option) => option.label === optionLabel);
             optionIndex.value = value;

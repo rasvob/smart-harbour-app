@@ -1,23 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { PenIcon, PenSquareIcon } from "../Icons/SvgIcons";
 
-// const milisecondsToHoursAndMinutes = (ms) => {
-//     const hours = Math.floor(ms / 1000 / 60 / 60);
-//     const minutes = Math.floor(ms / 1000 / 60) - (hours * 60);
-
-//     return `${hours}h ${minutes}m`;
-// };
-
-// const prepareViewData = (data) => {
-//     return data.map((item) => {
-//         return {
-//             ...item,
-//             'inHarbour': item.outflowTime === null,
-//             'timeInHarbour': item.outflowTime === null ? milisecondsToHoursAndMinutes(new Date() - new Date(item.inflowTime)) : milisecondsToHoursAndMinutes(new Date(item.outflowTime) - new Date(item.inflowTime)),
-//         };
-//     });
-// };
-
 const PaymentCheckbox = ({id, checked, onChange}) => {
     return (
         <input type="checkbox" checked={checked} onChange={onChange} id={id} className={`checkbox ${checked ? "checkbox-success" : "checkbox-error"}`} />
@@ -90,16 +73,16 @@ const StateDetailTable = ({data, setPaymentStatus, setBoatNumber, getBoatById, g
                     <form method="dialog">
                         <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                     </form>
-                    <h3 className="font-bold text-lg">Current boat number: {selectedId && getBoatById(selectedId).boatNumber}</h3>
+                    <h3 className="font-bold text-lg">Číslo lodi: {selectedId && getBoatById(selectedId).boatNumber}</h3>
                     
                     <form onSubmit={submitBoatNumberChange} >
                     <label className="form-control w-full max-w-xs">
                         <div className="label">
-                            <span className="label-text">Change boat number</span>
+                            <span className="label-text">Zadejte číslo lodi</span>
                         </div>
-                        <input type="text" placeholder="e.g. 4P5 456 - P" className="input input-bordered w-full max-w-xs" value={newBoatNumber} onChange={(e) => setNewBoatNumber(e.target.value)} />
+                        <input type="text" placeholder="např. 4P5 456 - P" className="input input-bordered w-full max-w-xs" value={newBoatNumber} onChange={(e) => setNewBoatNumber(e.target.value)} />
                     </label>
-                    <button className="btn btn-success text-white mt-4" type="submit">Submit</button>
+                    <button className="btn btn-success text-white mt-4" type="submit">Potvrdit</button>
                     </form>
                 </div>
                 {/* <form method="dialog" className="modal-backdrop">
