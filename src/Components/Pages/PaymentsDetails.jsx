@@ -1,8 +1,6 @@
-import { useState, useEffect } from "react";
 import { useBoatStore } from "../../Data/DataStore";
-import { StateDetailTable } from "../Tables/StateDetailTable";
-import { BoatDataFilterView } from "../Tables/BoatDataFilterView";
 import { usePaymentDetailsFilterStore } from "../../Data/FilterStore";
+import DetailTableView from "./DetailTableView";
 
 const PaymentsDetails = () => {
     const data = useBoatStore((state) => state.boatData);
@@ -15,22 +13,23 @@ const PaymentsDetails = () => {
     const getTableViewData = useBoatStore((state) => state.getTableViewData);
     const getFilteredTableViewData = useBoatStore((state) => state.getFilteredTableViewData);
     const addNewBoat = useBoatStore((state) => state.addNewBoat);
-    
-    // useEffect(() => {
-    //     resetFilters();
-    // }
-    // , []);
+
+    const viewHeading = "Přehled plateb";
 
     return (
-        <div className='container mx-auto mt-2'>
-            <h1 className='text-4xl'>Přehled plateb</h1>
-
-            <BoatDataFilterView filters={filters} setOptionValue={setOptionValue} resetFilters={resetFilters} addNewBoat={addNewBoat} />
-
-            <div className="mt-2">
-                <StateDetailTable data={data} setPaymentStatus={switchPaymentStatus} setBoatNumber={setBoatNumber} getBoatById={getBoatById} getTableViewData={getTableViewData} getFilteredTableViewData={getFilteredTableViewData} filters={filters} />
-            </div>
-        </div>
+        <DetailTableView 
+            heading={viewHeading} 
+            data={data} 
+            switchPaymentStatus={switchPaymentStatus} 
+            setBoatNumber={setBoatNumber} 
+            getBoatById={getBoatById} 
+            getTableViewData={getTableViewData} 
+            getFilteredTableViewData={getFilteredTableViewData} 
+            filters={filters} 
+            setOptionValue={setOptionValue} 
+            resetFilters={resetFilters}
+            addNewBoat={addNewBoat}
+        />
     );
 };
 
