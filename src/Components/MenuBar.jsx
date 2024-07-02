@@ -1,6 +1,7 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
+import { useAuthStore } from '../Data/AuthStore';
 
-const MenuBar = () => {
+const MenuBar = ({isAuthenticated, handleLogout}) => {
     return (
         <div className="navbar shadow-sm">
             <div className="flex-1">
@@ -11,12 +12,21 @@ const MenuBar = () => {
                 Smart Harbour
                 </NavLink>
             </div>
+
             <div className="flex-none">
-                <ul className="menu menu-horizontal">
+            <ul className="menu menu-horizontal">
+            { isAuthenticated() ? (
+            <>
                 <li className="mx-1"><NavLink to="/">Domů</NavLink></li>
                 <li className="mx-1"><NavLink to="/state-details">Podrobný stav</NavLink></li>
                 <li className="mx-1"><NavLink to="/payments">Platby stání</NavLink></li>
-                </ul>
+                <li className="mx-1"><span onClick={handleLogout}>Odhlásit</span></li>
+            </>
+            ) : (
+                <li className="mx-1"><Link className="bg-success hover:bg-primary text-white active:bg-black" to="/login">Přihlášení</Link></li>
+            )
+            }
+            </ul>
             </div>
         </div>
     );

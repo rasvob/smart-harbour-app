@@ -5,4 +5,16 @@ const milisecondsToHoursAndMinutes = (ms) => {
     return `${hours}h ${minutes}m`;
 };
 
-export { milisecondsToHoursAndMinutes };
+const getValueFromLocalStorage = (key) => {
+    const value = localStorage.getItem(key);
+    return value ? JSON.parse(value) : null;
+};
+
+const setValueToLocalStorage = (key, value) => {
+    localStorage.setItem(key, JSON.stringify(value));
+};
+
+
+
+
+export { milisecondsToHoursAndMinutes, getValueFromLocalStorage, setValueToLocalStorage };

@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { HomeIcon, BoxesPlusIcon,  GlobeIcon, WarningIcon, PlusCircleIcon, PlusIcon, MinusCircleIcon, RightArrowTop, CreditCardIcon } from "../Icons/SvgIcons";
+import { useAuthStore } from "../../Data/AuthStore";
 
 const DatetimeComponent = ({date, time}) => {
     return (
@@ -11,7 +12,7 @@ const DatetimeComponent = ({date, time}) => {
     );
 };
 
-const NowSummaryComponent = ({title}) => {
+const NowSummaryComponent = ({title, username, role}) => {
     const [time, setTime] = useState(new Date().toLocaleTimeString());
     const [date, setDate] = useState(new Date().toLocaleDateString());
 
@@ -109,11 +110,25 @@ const PaymentsStats = () => {
     );
 };
 
+const CurrentUserComponent = ({username, role}) => {
+    return (
+        <div className="flex gap-2">
+            <p className="text-base-content">Přihlášený uživatel: {username}</p>
+            <p className="text-base-content">(role: {role})</p>
+        </div>
+    );
+};
+
 const Home = () => {
+    const user = useAuthStore((state) => state.currentUser);
     return (
         <div className="container mx-auto">
             <div className="my-2">
                 <NowSummaryComponent title="Aktuální přehled" />
+            </div>
+
+            <div className="my-2">
+                <CurrentUserComponent username={user.full_name} role={user.role} />
             </div>
 
             <div className="my-2 flex justify-between flex-wrap space-y-4 2xl:space-y-0">

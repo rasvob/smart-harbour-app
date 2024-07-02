@@ -29,7 +29,7 @@ const prepareViewData = (data) => {
     });
 };
 
-const repeatedData = repeatData(dataset, 20);
+const repeatedData = repeatData(dataset, 1);
 
 export const useBoatStore = create((set, get) => ({
     boatData: repeatedData,
@@ -84,4 +84,7 @@ export const useBoatStore = create((set, get) => ({
             return { boatData: newData };
         });
     },
+    setBoatData: (data) => {
+        set({ boatData: [...data] });
+    }
 }));
