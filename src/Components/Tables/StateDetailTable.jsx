@@ -59,7 +59,7 @@ const StateDetailTable = ({data, setPaymentStatus, setBoatNumber, getBoatById, g
                                 <td>{item.boatLength}</td>
                                 <td>
                                     {
-                                        item.payedState === "Neplatí" ? item.payedState : <PaymentCheckbox checked={item.payedState === 'Ano'} onChange={(e) => setPaymentStatus(item.id)} />
+                                        item.payedState === "Neplatí" ? item.payedState : <PaymentCheckbox checked={item.payedState === 'Zaplaceno'} onChange={(e) => setPaymentStatus(item.id)} />
                                     }
                                 </td>
                             </tr>

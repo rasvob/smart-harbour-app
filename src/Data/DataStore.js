@@ -32,25 +32,29 @@ const prepareViewData = (data) => {
 const repeatedData = repeatData(dataset, 1);
 
 export const useBoatStore = create((set, get) => ({
-    boatData: repeatedData,
+    boatData: [],
     setPaymentStatus: (id, status) => {
         set((state) => {
             const newData = [...state.boatData];
-            newData[id].payedState = status;
+            newData.find(item => item.id === id).payedState = status;
             return { boatData: newData };
         });
     },
     switchPaymentStatus: (id) => {
         set((state) => {
             const newData = [...state.boatData];
-            newData[id].payedState = newData[id].payedState === 'Ano' ? 'Ne' : 'Ano';
+            let currentState = newData.find(item => item.id === id).payedState;
+            newData.find(item => item.id === id).payedState =  {
+                'Zaplaceno': 'Nezaplaceno',
+                'Nezaplaceno': 'Zaplaceno',
+            }[currentState];
             return { boatData: newData };
         });
     },
     setBoatNumber: (id, boatNumber) => {
         set((state) => {
             const newData = [...state.boatData];
-            newData[id].boatNumber = boatNumber;
+            newData.find(item => item.id === id).boatNumber = boatNumber;
             return { boatData: newData };
         });
     },
@@ -68,13 +72,13 @@ export const useBoatStore = create((set, get) => ({
             filteredData = filteredData.filter((item) => {
                 for (let optionIndex = 0; optionIndex < filter.options.length; optionIndex++) {
                     const option = filter.options[optionIndex];
-                    if (option.value && option.predicate(item)) {
+                    const predicateResult = option.predicate(item);
+                    if (option.value && predicateResult) {
                         return true;
                     }
                 }
             });
         }
-    
         return prepareViewData(filteredData);
     },
     addNewBoat: (boat) => {
@@ -85,6 +89,8 @@ export const useBoatStore = create((set, get) => ({
         });
     },
     setBoatData: (data) => {
-        set({ boatData: [...data] });
+        set((_) => {
+            return { boatData: [...data] };
+        });
     }
 }));

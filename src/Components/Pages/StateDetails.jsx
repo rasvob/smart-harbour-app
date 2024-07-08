@@ -29,6 +29,7 @@ const StateDetails = () => {
             const mappedData = mapRestBoatStatesToVmStates(dataFromAPI);
             setBoatData(mappedData);
             console.log(mappedData);
+
             toast.success("Data byla úspěšně načtena");
         }
         else {
@@ -38,11 +39,11 @@ const StateDetails = () => {
 
     useEffect(() => {
         fetchData();
-        // toast.success("Data byla úspěšně načtena");
     }, []);
 
     return (
-        <DetailTableView 
+        <div>
+            <DetailTableView 
             heading={viewHeading} 
             data={data} 
             switchPaymentStatus={switchPaymentStatus} 
@@ -54,7 +55,8 @@ const StateDetails = () => {
             setOptionValue={setOptionValue} 
             resetFilters={resetFilters}
             addNewBoat={addNewBoat}
-        />
+            />
+        </div>
     );
 };
 

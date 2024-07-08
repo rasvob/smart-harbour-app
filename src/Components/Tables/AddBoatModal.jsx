@@ -1,5 +1,6 @@
 import { forwardRef, useState } from 'react';
 import toast from 'react-hot-toast';
+import { mapBoatLengthToBackend, mapPayedStateToBackend } from '../../API/DataMappers';
 
 const showModal = (modalRef) => {
     modalRef.current.showModal();
@@ -61,7 +62,7 @@ const AddBoatModal = forwardRef(({addNewBoat}, modalRef) => {
 
     const addBoatHandler = (e) => {
         e.preventDefault();
-        addNewBoat({'inflowTime': inflowTime, 'outflowTime': outflowTime, 'boatNumber': boatNumber, 'boatLength': boatLength, 'payedState': payedState });
+        addNewBoat({'inflowTime': inflowTime, 'outflowTime': outflowTime, 'boatNumber': boatNumber, 'boatLength': mapBoatLengthToBackend(boatLength), 'payedState': mapPayedStateToBackend(payedState) });
         resetState();
         modalRef.current.close();
         toast.success("Loď byla úspěšně přidána.");

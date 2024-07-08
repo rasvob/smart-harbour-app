@@ -4,6 +4,11 @@ import { useAuthStore } from '../../Data/AuthStore';
 import { getAccessToken, getCurrentUser } from '../../API/RestApi';
 import toast from 'react-hot-toast';
 
+const Loader = () => {
+    return (
+        <span className="loading loading-spinner"></span>
+    );
+};
 
 export const LoginPage = () => {
     const navigate = useNavigate();
@@ -13,9 +18,13 @@ export const LoginPage = () => {
     const [password, setPassword] = useState('');
     const [loginErrorMessage, setLoginErrorMessage] = useState('');
     const [loginFailed, setLoginFailed] = useState(false);
+    const [loginInProgress, setLoginInProgress] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoginErrorMessage('')
+        setLoginFailed(false);
+        setLoginInProgress(true);
         const [success, data] = await getAccessToken(username, password);
         if (success) {
             setToken(data);
@@ -25,6 +34,7 @@ export const LoginPage = () => {
                 toast.error("Nepodařilo se načíst uživatele");
                 setLoginFailed(true);
                 setLoginErrorMessage(data);
+                setLoginInProgress(false);
                 return;
             }
 
@@ -35,6 +45,7 @@ export const LoginPage = () => {
             toast.error(data);
             setLoginFailed(true);
             setLoginErrorMessage(data);
+            setLoginInProgress(false);
         }
     };
 
@@ -45,17 +56,20 @@ export const LoginPage = () => {
                 <div className="label">
                     <span className="label-text">Uživatelské jméno</span>
                 </div>
-                <input type="text" placeholder="Uživatelské jméno" className={`input input-bordered w-full max-w-xs ${loginFailed ? 'input-error' : ''}`} value={username} onChange={e => setUsername(e.target.value)} />
+                <input type="text" placeholder="Uživatelské jméno" className={`input input-bordered w-full ${loginFailed ? 'input-error' : ''}`} value={username} onChange={e => setUsername(e.target.value)} />
                 </label>
 
                 <label className="form-control w-full max-w-sm">
                 <div className="label">
                     <span className="label-text">Heslo</span>
                 </div>
-                <input type="password" placeholder="Heslo" className={`input input-bordered w-full max-w-xs ${loginFailed ? 'input-error' : ''}`} value={password} onChange={e => setPassword(e.target.value)} />
+                <input type="password" placeholder="Heslo" className={`input input-bordered w-full ${loginFailed ? 'input-error' : ''}`} value={password} onChange={e => setPassword(e.target.value)} />
                 </label>
 
-                <button className='btn btn-success text-white mt-4 w-full' type="submit">Přihlásit</button>
+                <button className={`btn btn-success text-white mt-4 w-full ${loginInProgress ? 'btn-disabled' : ''}`} type="submit">
+                {loginInProgress ? <Loader /> : ''}
+                {loginInProgress ? '' : 'Přihlásit se'}
+                </button>
 
                 <label className="form-control max-w-sm">
                 <div className="label">

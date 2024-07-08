@@ -24,11 +24,11 @@ const stateDetailsFilterTemplates = [
     {
         'attribute': 'payedState',
         'type': 'checkbox',
-        'label': 'Zaplaceno',
+        'label': 'Stání zaplaceno',
         'predicate': (item) => item.payedState === 'Ano',
         'options': [
-            {'value': true, 'predicate': (item) => item.payedState === 'Ano', 'label': 'Ano'},
-            {'value': true, 'predicate': (item) => item.payedState === 'Ne', 'label': 'Ne'},
+            {'value': true, 'predicate': (item) => item.payedState === 'Zaplaceno', 'label': 'Ano'},
+            {'value': true, 'predicate': (item) => item.payedState === 'Nezaplaceno', 'label': 'Ne'},
             {'value': true, 'predicate': (item) => item.payedState === 'Neplatí', 'label': 'Neplatí'},
         ],
     },
@@ -38,9 +38,18 @@ const stateDetailsFilterTemplates = [
         'label': 'Doba stání',
         'predicate': (item) => harbourTimeToHours(item.inflowTime, item.outflowTime) < 4.0,
         'options': [
-            {'value': true, 'predicate': (item) => harbourTimeToHours(item.inflowTime, item.outflowTime) < 4.0, 'label': 'Do 4 hodin'},
-            {'value': true, 'predicate': (item) => (harbourTimeToHours(item.inflowTime, item.outflowTime) >= 4.0 && harbourTimeToHours(item.inflowTime, item.outflowTime) <= 24.0), 'label': 'Nad 4 hodiny'},
-            {'value': true, 'predicate': (item) => harbourTimeToHours(item.inflowTime, item.outflowTime) > 24.0, 'label': 'Více dní'},
+            {'value': true, 'predicate': (item) => {
+                // console.log('Do 4 hodin', item.inflowTime, item.outflowTime, harbourTimeToHours(item.inflowTime, item.outflowTime));
+                return harbourTimeToHours(item.inflowTime, item.outflowTime) < 4.0;
+            }, 'label': 'Do 4 hodin'},
+            {'value': true, 'predicate': (item) => { 
+                // console.log('Nad 4 hodiny', item.inflowTime, item.outflowTime, harbourTimeToHours(item.inflowTime, item.outflowTime));
+                return (harbourTimeToHours(item.inflowTime, item.outflowTime) >= 4.0 && harbourTimeToHours(item.inflowTime, item.outflowTime) <= 24.0) 
+            }, 'label': 'Nad 4 hodiny'},
+            {'value': true, 'predicate': (item) => {
+                // console.log('Více dní', item.inflowTime, item.outflowTime, harbourTimeToHours(item.inflowTime, item.outflowTime));
+                return harbourTimeToHours(item.inflowTime, item.outflowTime) > 24.0;
+            }, 'label': 'Více dní'},
         ],
     },
     {
@@ -49,8 +58,8 @@ const stateDetailsFilterTemplates = [
         'label': 'Délka lodi',
         'predicate': (item) => item.boatLength === 'do 8 m',
         'options': [
-            {'value': true, 'predicate': (item) => item.boatLength === 'do 8 m', 'label': 'Do 8 metrů'},
-            {'value': true, 'predicate': (item) => item.boatLength === 'nad 8 m', 'label': 'Nad 4 hodiny'},
+            {'value': true, 'predicate': (item) => item.boatLength === 'pod 8m', 'label': 'Do 8 metrů'},
+            {'value': true, 'predicate': (item) => item.boatLength === 'nad 8m', 'label': 'Nad 8 metrů'},
         ],
     },
 ];
@@ -72,8 +81,8 @@ const paymentDetailsFilterTemplates = [
         'label': 'Zaplaceno',
         'predicate': (item) => item.payedState === 'Ano',
         'options': [
-            {'value': true, 'predicate': (item) => item.payedState === 'Ano', 'label': 'Ano'},
-            {'value': true, 'predicate': (item) => item.payedState === 'Ne', 'label': 'Ne'},
+            {'value': true, 'predicate': (item) => item.payedState === 'Zaplaceno', 'label': 'Ano'},
+            {'value': true, 'predicate': (item) => item.payedState === 'Nezaplaceno', 'label': 'Ne'},
             {'value': true, 'predicate': (item) => item.payedState === 'Neplatí', 'label': 'Neplatí'},
         ],
     },

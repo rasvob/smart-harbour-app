@@ -15,4 +15,28 @@ const mapRestBoatStatesToVmStates = (restBoatStates) => {
     return restBoatStates.map(mapRestBoatStateToVmState);
 };
 
-export { mapRestBoatStateToVmState, mapRestBoatStatesToVmStates };
+const mapBoatLengthToBackend = (boatLength) => {
+    switch (boatLength) {
+        case "do 8 m":
+            return "pod 8m";
+        case "nad 8 m":
+            return "nad 8m";
+        default:
+            return "pod 8m";
+    }
+};
+
+const mapPayedStateToBackend = (payedState) => {
+    switch (payedState) {
+        case "Ano":
+            return "Zaplaceno";
+        case "Ne":
+            return "Nezaplaceno";
+        case "Neplatí":
+            return "Neplatí";
+        default:
+            return "Nezaplaceno";
+    }
+};
+
+export { mapRestBoatStateToVmState, mapRestBoatStatesToVmStates, mapBoatLengthToBackend, mapPayedStateToBackend};
