@@ -20,7 +20,7 @@ const MenuBar = ({isAuthenticated, handleLogout}) => {
                 <li className="mx-1"><NavLink to="/">Domů</NavLink></li>
                 <li className="mx-1"><NavLink to="/state-details">Podrobný stav</NavLink></li>
                 <li className="mx-1"><NavLink to="/payments">Platby stání</NavLink></li>
-                <li className="mx-1"><span onClick={handleLogout}>Odhlásit</span></li>
+                <li className="mx-1"><span className="outline-1 outline outline-error hover:bg-error" onClick={handleLogout}>Odhlásit</span></li>
             </>
             ) : (
                 <li className="mx-1"><Link className="bg-success hover:bg-primary text-white active:bg-black" to="/login">Přihlášení</Link></li>

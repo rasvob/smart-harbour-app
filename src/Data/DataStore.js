@@ -83,8 +83,7 @@ export const useBoatStore = create((set, get) => ({
     },
     addNewBoat: (boat) => {
         set((state) => {
-            let maxId = state.boatData.reduce((max, item) => Math.max(max, item.id), 0) + 1;
-            const newData = [...state.boatData, {...boat, id: maxId}];
+            const newData = [...state.boatData, boat];
             return { boatData: newData };
         });
     },

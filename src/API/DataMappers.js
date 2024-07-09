@@ -11,6 +11,21 @@ const mapRestBoatStateToVmState = (restBoatState) => {
     };
 };
 
+const mapVmStateToRestBoatState = (vmState) => {
+    const { inflowTime, outflowTime, boatNumber, boatLength, payedState } = vmState;
+    return {
+        'arrival_time': inflowTime,
+        'departure_time': outflowTime === '' ? null : outflowTime,
+        'best_detected_identifier': boatNumber,
+        'best_detected_boat_length': boatLength,
+        'payment_status': payedState,
+        'time_in_marina': outflowTime === '' ? Math.floor((new Date() - new Date(inflowTime))/60000) : Math.floor((new Date(outflowTime) - new Date(inflowTime))/60000),
+        'state_of_boat': 'Kotví',
+        'added_manually': true,
+        'edit_timestamp': new Date().toISOString(),
+    };
+};
+
 const mapRestBoatStatesToVmStates = (restBoatStates) => {
     return restBoatStates.map(mapRestBoatStateToVmState);
 };
@@ -39,4 +54,10 @@ const mapPayedStateToBackend = (payedState) => {
     }
 };
 
-export { mapRestBoatStateToVmState, mapRestBoatStatesToVmStates, mapBoatLengthToBackend, mapPayedStateToBackend};
+export { 
+    mapRestBoatStateToVmState,
+    mapRestBoatStatesToVmStates,
+    mapBoatLengthToBackend,
+    mapPayedStateToBackend,
+    mapVmStateToRestBoatState
+};

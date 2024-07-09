@@ -28,8 +28,6 @@ const StateDetails = () => {
         if (dataFromAPI != null) {
             const mappedData = mapRestBoatStatesToVmStates(dataFromAPI);
             setBoatData(mappedData);
-            console.log(mappedData);
-
             toast.success("Data byla úspěšně načtena");
         }
         else {

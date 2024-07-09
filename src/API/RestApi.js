@@ -3,6 +3,7 @@ const API_BASEURl = import.meta.env.VITE_API_BASEURl
 const API_LOGIN_URL = '/login/access-token';
 const API_CURRENT_USER_URL = '/login/current-user';
 const API_STATES_URL = '/states';
+const API_ADD_STATE_URL = '/state';
 
 const fetchWithTimeout = (resource, options = {}, timeout = 5000) => { // timeout in milliseconds
     const controller = new AbortController();
@@ -85,4 +86,23 @@ const getAllStates = async (token) => {
     return null;
 }
 
-export { getAccessToken, getCurrentUser, getAllStates };
+const addNewBoatState = async (token, boatState) => {
+    const response = await fetch(API_BASEURl + API_ADD_STATE_URL, {
+        method: 'POST',
+        headers: {
+            'accept': 'application/json',
+            'Authorization': token,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(boatState)
+    });
+
+    if (response.ok) {
+        return await response.json();
+    }
+
+    return null;
+};
+
+
+export { getAccessToken, getCurrentUser, getAllStates, addNewBoatState };
