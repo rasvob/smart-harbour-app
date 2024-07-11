@@ -3,8 +3,8 @@ const mapRestBoatStateToVmState = (restBoatState) => {
     const { id, arrival_time, departure_time, best_detected_boat_length, best_detected_identifier, payment_status } = restBoatState;
     return {
         'id': id,
-        'inflowTime': arrival_time,
-        'outflowTime': departure_time,
+        'inflowTime': arrival_time.toLocaleString('cs-CZ').slice(0, 19),
+        'outflowTime': departure_time !== null ? departure_time.toLocaleString('cs-CZ').slice(0, 19) : null,
         'boatNumber': best_detected_identifier,
         'boatLength': best_detected_boat_length,
         'payedState': payment_status,
@@ -12,8 +12,9 @@ const mapRestBoatStateToVmState = (restBoatState) => {
 };
 
 const mapVmStateToRestBoatState = (vmState) => {
-    const { inflowTime, outflowTime, boatNumber, boatLength, payedState } = vmState;
+    const { inflowTime, outflowTime, boatNumber, boatLength, payedState, id } = vmState;
     return {
+        'id': id,
         'arrival_time': inflowTime,
         'departure_time': outflowTime === '' ? null : outflowTime,
         'best_detected_identifier': boatNumber,
@@ -41,6 +42,17 @@ const mapBoatLengthToBackend = (boatLength) => {
     }
 };
 
+const mapBoatLengthToVm = (boatLength) => {
+    switch (boatLength) {
+        case "pod 8m":
+            return "do 8 m";
+        case "nad 8m":
+            return "nad 8 m";
+        default:
+            return "do 8 m";
+    }
+};
+
 const mapPayedStateToBackend = (payedState) => {
     switch (payedState) {
         case "Ano":
@@ -54,10 +66,25 @@ const mapPayedStateToBackend = (payedState) => {
     }
 };
 
+const mapPayedStateToVm = (payedState) => {
+    switch (payedState) {
+        case "Zaplaceno":
+            return "Ano";
+        case "Nezaplaceno":
+            return "Ne";
+        case "Neplatí":
+            return "Neplatí";
+        default:
+            return "Nezaplaceno";
+    }
+};
+
 export { 
     mapRestBoatStateToVmState,
     mapRestBoatStatesToVmStates,
     mapBoatLengthToBackend,
     mapPayedStateToBackend,
-    mapVmStateToRestBoatState
+    mapVmStateToRestBoatState,
+    mapBoatLengthToVm,
+    mapPayedStateToVm
 };

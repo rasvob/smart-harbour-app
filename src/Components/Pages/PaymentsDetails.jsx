@@ -2,7 +2,7 @@ import { useBoatStore } from "../../Data/DataStore";
 import { usePaymentDetailsFilterStore } from "../../Data/FilterStore";
 import DetailTableView from "./DetailTableView";
 import { useEffect } from "react";
-import { getAllStates } from "../../API/RestApi";
+import { getAllStates, updateBoatStateIdentifier, updatePaymentStatus } from "../../API/RestApi";
 import { mapRestBoatStatesToVmStates } from "../../API/DataMappers";
 import toast from 'react-hot-toast';
 import { useAuthStore } from "../../Data/AuthStore";
@@ -18,7 +18,6 @@ const PaymentsDetails = () => {
     const getBoatById = useBoatStore((state) => state.getBoatById);
     const getTableViewData = useBoatStore((state) => state.getTableViewData);
     const getFilteredTableViewData = useBoatStore((state) => state.getFilteredTableViewData);
-    const addNewBoat = useBoatStore((state) => state.addNewBoat);
     const token = useAuthStore((state) => state.token);
 
     const viewHeading = "Přehled plateb";
@@ -51,7 +50,9 @@ const PaymentsDetails = () => {
             filters={filters} 
             setOptionValue={setOptionValue} 
             resetFilters={resetFilters}
-            addNewBoat={addNewBoat}
+            updatePaymentStatus={updatePaymentStatus}
+            updateBoatStateIdentifier={updateBoatStateIdentifier}
+            token={token}
         />
     );
 };

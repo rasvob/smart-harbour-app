@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { PenIcon, PenSquareIcon } from "../Icons/SvgIcons";
+import { AddOrUpdateBoatModal } from "./AddOrUpdateBoatModal";
+import toast from "react-hot-toast";
 
 const PaymentCheckbox = ({id, checked, onChange}) => {
     return (
@@ -7,10 +9,11 @@ const PaymentCheckbox = ({id, checked, onChange}) => {
     );
 };
 
-const StateDetailTable = ({data, setPaymentStatus, setBoatNumber, getBoatById, getTableViewData, filters, getFilteredTableViewData}) => {
+const StateDetailTable = ({data, switchPaymentStatus, setBoatNumber, getBoatById, getTableViewData, filters, getFilteredTableViewData, updatePaymentStatus, updateBoatStateIdentifier, token}) => {
     const [selectedId, setSelectedId] = useState(0);
     const [newBoatNumber, setNewBoatNumber] = useState(1);
     const editBoatNumberModalRef = useRef(null);
+    const editBoatStateModalRef = useRef(null);
 
     const editBoatNumber = (id) => {
         setSelectedId(id);
@@ -19,11 +22,42 @@ const StateDetailTable = ({data, setPaymentStatus, setBoatNumber, getBoatById, g
         editBoatNumberModalRef.current.showModal();
     };
 
-    const submitBoatNumberChange = (e) => {
+    const editBoatState = (id) => {
+        setSelectedId(id);
+        editBoatStateModalRef.current.showModal();
+    }
+
+    const submitBoatNumberChange = async (e) => {
         e.preventDefault();
-        if (newBoatNumber !== null) {
+
+        if (newBoatNumber === "" || newBoatNumber === null) {
+            toast.error("Číslo lodi nesmí být prázdné");
+            return;
+        }
+
+        const res = updateBoatStateIdentifier(token, selectedId, newBoatNumber);
+
+        if (res) {
             setBoatNumber(selectedId, newBoatNumber);
-            editBoatNumberModalRef.current.close();
+            toast.success("Číslo lodi bylo úspěšně aktualizováno");
+
+        } else {
+            toast.error("Nepodařilo se aktualizovat číslo lodi");
+        }
+        
+        editBoatNumberModalRef.current.close();
+    };
+
+    const updatePaymentStatusOnClick = async (id) => {
+        switchPaymentStatus(id);
+        const boat = getBoatById(id);
+        const response = await updatePaymentStatus(token, id, boat.payedState);
+
+        if (response) {
+            toast.success("Stav platby byl úspěšně aktualizován");
+        } else {
+            toast.error("Nepodařilo se aktualizovat stav platby");
+            switchPaymentStatus(id);
         }
     };
 
@@ -39,6 +73,7 @@ const StateDetailTable = ({data, setPaymentStatus, setBoatNumber, getBoatById, g
                         <th className="text-left">Číslo lodě</th>
                         <th className="text-left">Délka lodě</th>
                         <th className="text-left">Zaplaceno</th>
+                        <th className="text-left"> </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -54,20 +89,23 @@ const StateDetailTable = ({data, setPaymentStatus, setBoatNumber, getBoatById, g
                                 <td className="lg:flex lg:place-content-between lg:items-center lg:flex-wrap">
                                     <span className={`${item.boatNumber && item.boatNumber.includes('?') ? "font-bold text-error" : ""}`}>{item.boatNumber}</span>
                                     {/* {item.boatNumber === null || item.boatNumber.includes('?') ? <button className="btn btn-sm btn-outline btn-info" onClick={() => editBoatNumber(item.id)}><PenSquareIcon /></button> : null} */}
-                                    <button className="btn btn-sm btn-outline btn-info" onClick={() => editBoatNumber(item.id)}><PenSquareIcon /></button>
+                                    <button className="gap-2 btn btn-sm btn-outline btn-info" onClick={() => editBoatNumber(item.id)}><PenSquareIcon /></button>
                                 </td>
                                 <td>{item.boatLength}</td>
                                 <td>
                                     {
-                                        item.payedState === "Neplatí" ? item.payedState : <PaymentCheckbox checked={item.payedState === 'Zaplaceno'} onChange={(e) => setPaymentStatus(item.id)} />
+                                        item.payedState === "Neplatí" ? item.payedState : <PaymentCheckbox checked={item.payedState === 'Zaplaceno'} onChange={(e) => updatePaymentStatusOnClick(item.id)} />
                                     }
+                                </td>
+                                <td>
+                                    <button className="btn btn-sm btn-outline btn-info" onClick={() => editBoatState(item.id)}><PenIcon /></button>
                                 </td>
                             </tr>
                         );
                     })}
                 </tbody>
             </table>
-
+            
             <dialog id="editBoatNumberModal" className="modal" ref={editBoatNumberModalRef}>
                 <div className="modal-box">
                     <form method="dialog">
@@ -89,6 +127,8 @@ const StateDetailTable = ({data, setPaymentStatus, setBoatNumber, getBoatById, g
                     <button>Close</button>
                 </form> */}
             </dialog>
+
+            <AddOrUpdateBoatModal selectedBoatId={selectedId} actionButtonText="Aktualizovat" titleText="Aktualizovat záznam" ref={editBoatStateModalRef} />
         </div>
     );
 };

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useBoatStore } from "../../Data/DataStore";
 import { useAuthStore } from "../../Data/AuthStore";
 import { useStateDetailsFilterStore } from "../../Data/FilterStore";
-import { getAllStates } from "../../API/RestApi";
+import { getAllStates, updatePaymentStatus, updateBoatStateIdentifier } from "../../API/RestApi";
 import { mapRestBoatStatesToVmStates } from "../../API/DataMappers";
 import DetailTableView from "./DetailTableView";
 import toast from 'react-hot-toast';
@@ -18,7 +18,6 @@ const StateDetails = () => {
     const getBoatById = useBoatStore((state) => state.getBoatById);
     const getTableViewData = useBoatStore((state) => state.getTableViewData);
     const getFilteredTableViewData = useBoatStore((state) => state.getFilteredTableViewData);
-    const addNewBoat = useBoatStore((state) => state.addNewBoat);
     const token = useAuthStore((state) => state.token);
 
     const viewHeading = "Přehled stavu přístavu";
@@ -52,7 +51,9 @@ const StateDetails = () => {
             filters={filters} 
             setOptionValue={setOptionValue} 
             resetFilters={resetFilters}
-            addNewBoat={addNewBoat}
+            updatePaymentStatus={updatePaymentStatus}
+            updateBoatStateIdentifier={updateBoatStateIdentifier}
+            token={token}
             />
         </div>
     );

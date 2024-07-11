@@ -23,10 +23,12 @@ const prepareViewData = (data) => {
     return data.map((item) => {
         return {
             ...item,
+            'inflowTime': new Date(item.inflowTime).toLocaleString('cs-CZ'),
+            'outflowTime': item.outflowTime === null ? null : new Date(item.outflowTime).toLocaleString('cs-CZ'),
             'inHarbour': item.outflowTime === null,
             'timeInHarbour': item.outflowTime === null ? milisecondsToHoursAndMinutes(new Date() - new Date(item.inflowTime)) : milisecondsToHoursAndMinutes(new Date(item.outflowTime) - new Date(item.inflowTime)),
         };
-    });
+    }).sort((a, b) => b.id - a.id);
 };
 
 const repeatedData = repeatData(dataset, 1);
@@ -90,6 +92,14 @@ export const useBoatStore = create((set, get) => ({
     setBoatData: (data) => {
         set((_) => {
             return { boatData: [...data] };
+        });
+    },
+    updateBoatState: (boat) => {
+        set((state) => {
+            const newData = [...state.boatData];
+            const index = newData.findIndex(item => item.id === boat.id);
+            newData[index] = boat;
+            return { boatData: newData };
         });
     }
 }));

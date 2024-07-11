@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { HomeIcon, BoxesPlusIcon,  GlobeIcon, WarningIcon, PlusCircleIcon, PlusIcon, MinusCircleIcon, RightArrowTop, CreditCardIcon } from "../Icons/SvgIcons";
 import { useAuthStore } from "../../Data/AuthStore";
+import { getDashboardData } from '../../API/RestApi';
 
 const DatetimeComponent = ({date, time}) => {
     return (
@@ -63,11 +64,11 @@ const StatItemComponent = ({title, value, desc, descValue=null, icon=null, altIc
     );
 };
 
-const CurrentStatsComponent = () => {
+const CurrentStatsComponent = ({data}) => {
     const statsItems = [
-        {title: "Počet lodí v přístavu", value: 20, desc: "Nerozpoznaných: ", descValue: 2, icon: "home"},
-        {title: "Dnes připlutí", value: 14, desc: "Nerozpoznaných: ", descValue: 2, icon: "inflow"},
-        {title: "Dnes odplutí", value: 6, desc: "Nerozpoznaných: ", descValue: 0, icon: "outflow"},
+        {title: "Počet lodí v přístavu", value: data.today_in_marina, desc: "Nerozpoznaných: ", descValue: data.today_in_marina_undetected_identifier, icon: "home"},
+        {title: "Dnes připlutí", value: data.today_arrived, desc: "Nerozpoznaných: ", descValue: data.today_arrived_undetected_identifier, icon: "inflow"},
+        {title: "Dnes odplutí", value: data.today_departed, desc: "Nerozpoznaných: ", descValue: data.today_departed_undetected_identifier, icon: "outflow"},
     ];
 
     const getIconByName = (name) => {
@@ -97,8 +98,8 @@ const CurrentStatsComponent = () => {
     );
 };
 
-const PaymentsStats = () => {
-    const paymentStatsItem =  {'payed': 21, 'unpayed': 41};
+const PaymentsStats = ({data}) => {
+    const paymentStatsItem =  {'payed': data.today_payed, 'unpayed': data.today_not_payed};
     
     return (
         <div className="stats shadow">
@@ -121,6 +122,18 @@ const CurrentUserComponent = ({username, role}) => {
 
 const Home = () => {
     const user = useAuthStore((state) => state.currentUser);
+    const token = useAuthStore((state) => state.token);
+    const [dashboardData, setDashboardData] = useState({});
+
+    const loadDashBoardData = async () => {
+        const data = await getDashboardData(token);
+        setDashboardData(data);
+    };
+
+    useEffect(() => {
+        loadDashBoardData();
+    }, []);
+
     return (
         <div className="container mx-auto">
             <div className="my-2">
@@ -132,8 +145,8 @@ const Home = () => {
             </div>
 
             <div className="my-2 flex justify-between flex-wrap space-y-4 2xl:space-y-0">
-                <CurrentStatsComponent data={null} />
-                <PaymentsStats />
+                <CurrentStatsComponent data={dashboardData} />
+                <PaymentsStats data={dashboardData} />
             </div>
 
             <div className="mt-4 skeleton w-full h-60"></div>

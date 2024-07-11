@@ -1,8 +1,8 @@
 import { RefreshIcon } from "../Icons/SvgIcons";
 import { useRef } from "react";
-import { AddBoatModal, showModal } from "./AddBoatModal";
+import { AddOrUpdateBoatModal, showModal } from "./AddOrUpdateBoatModal";
 
-const BoatDataFilterView = ({filters, setOptionValue, resetFilters, addNewBoat}) => {
+const BoatDataFilterView = ({filters, setOptionValue, resetFilters}) => {
     const addBoatRef = useRef(null);
 
     const CheckboxFilterItem = ({filter, setOptionValue}) => {
@@ -35,7 +35,7 @@ const BoatDataFilterView = ({filters, setOptionValue, resetFilters, addNewBoat})
             </div>
            
 
-            <AddBoatModal addNewBoat={addNewBoat} ref={addBoatRef} />
+            <AddOrUpdateBoatModal forAdding={true} titleText="Nová loď" actionButtonText="Přidat" ref={addBoatRef} />
         </div>
     );
 };
