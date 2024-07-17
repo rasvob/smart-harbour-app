@@ -2,7 +2,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { HomeIcon, BoxesPlusIcon,  GlobeIcon, WarningIcon, PlusCircleIcon, PlusIcon, MinusCircleIcon, RightArrowTop, CreditCardIcon } from "../Icons/SvgIcons";
 import { useAuthStore } from "../../Data/AuthStore";
-import { getDashboardData } from '../../API/RestApi';
+import { getDashboardData, WS_URL } from '../../API/RestApi';
+import useWebSocket, { ReadyState } from 'react-use-websocket';
+import toast from "react-hot-toast";
 
 const DatetimeComponent = ({date, time}) => {
     return (
@@ -120,10 +122,15 @@ const CurrentUserComponent = ({username, role}) => {
     );
 };
 
+
+
 const Home = () => {
     const user = useAuthStore((state) => state.currentUser);
     const token = useAuthStore((state) => state.token);
     const [dashboardData, setDashboardData] = useState({});
+    const { sendMessage, lastMessage,  readyState, sendJsonMessage } = useWebSocket(WS_URL, {
+        shouldReconnect: (closeEvent) => true,
+      });
 
     const loadDashBoardData = async () => {
         const data = await getDashboardData(token);
@@ -133,6 +140,33 @@ const Home = () => {
     useEffect(() => {
         loadDashBoardData();
     }, []);
+
+    useEffect(() => {
+        const connectionStatus = {
+            [ReadyState.CONNECTING]: 'Connecting',
+            [ReadyState.OPEN]: 'Open',
+            [ReadyState.CLOSING]: 'Closing',
+            [ReadyState.CLOSED]: 'Closed',
+            [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
+          }[readyState];
+
+        console.log(connectionStatus);
+
+        if (readyState === ReadyState.OPEN) {
+            sendJsonMessage({type: 'authorization', token: token});
+        }
+
+    }, [readyState]);
+
+    useEffect(() => {
+        if (lastMessage) {
+            if (lastMessage.type === 'error') {
+                toast.error(lastMessage.message);
+            } else if (lastMessage.type === 'image') {
+                console.log(lastMessage);
+            }
+        }
+    }, [lastMessage]);
 
     return (
         <div className="container mx-auto">

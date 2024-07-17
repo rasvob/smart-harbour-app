@@ -1,5 +1,6 @@
 
 const API_BASEURl = import.meta.env.VITE_API_BASEURl
+const API_RAW_BASEURl = import.meta.env.VITE_API_RAW_BASEURl
 const API_LOGIN_URL = '/login/access-token';
 const API_CURRENT_USER_URL = '/login/current-user';
 const API_STATES_URL = '/states';
@@ -7,6 +8,7 @@ const API_ADD_STATE_URL = '/state';
 const API_GET_DASHBOARD_DATA = '/dashboard';
 const API_UPDATE_PAYMENT_STATE_URL = '/state/payment';
 const API_UPDATE_IDENTIFIER_STATE_URL = '/state/identifier';
+const WS_URL = API_RAW_BASEURl + '/ws';
 
 const fetchWithTimeout = (resource, options = {}, timeout = 5000) => { // timeout in milliseconds
     const controller = new AbortController();
@@ -185,5 +187,6 @@ export {
     updatePaymentStatus,
     updateBoatStateIdentifier,
     updateBoatState,
-    getDashboardData
+    getDashboardData,
+    WS_URL, API_BASEURl
 };
