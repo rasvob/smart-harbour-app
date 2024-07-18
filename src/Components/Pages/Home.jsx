@@ -128,6 +128,7 @@ const Home = () => {
     const user = useAuthStore((state) => state.currentUser);
     const token = useAuthStore((state) => state.token);
     const [dashboardData, setDashboardData] = useState({});
+    const [cameraImage01, setCameraImage01] = useState('');
     const { sendMessage, lastMessage,  readyState, sendJsonMessage } = useWebSocket(WS_URL, {
         shouldReconnect: (closeEvent) => true,
       });
@@ -162,8 +163,9 @@ const Home = () => {
         if (lastMessage) {
             if (lastMessage.type === 'error') {
                 toast.error(lastMessage.message);
-            } else if (lastMessage.type === 'image') {
-                console.log(lastMessage);
+            } else if (lastMessage.type === 'message') {
+                setCameraImage01('data:image/jpeg;base64,'+JSON.parse(lastMessage.data).image);
+                console.log(JSON.parse(lastMessage.data).image);
             }
         }
     }, [lastMessage]);
@@ -183,7 +185,15 @@ const Home = () => {
                 <PaymentsStats data={dashboardData} />
             </div>
 
-            <div className="mt-4 skeleton w-full h-60"></div>
+            <div className={`my-2 flex justify-between gap-4 w-full ${cameraImage01 === '' ? 'skeleton h-60' : ''}`}>
+                <div className="w-1/2 flex-col">
+                    {cameraImage01 && <img src={cameraImage01} alt="Camera 01" />} 
+                </div>
+
+                <div className="w-1/2 flex-col">
+                    {cameraImage01 && <img src={cameraImage01} alt="Camera 01" />} 
+                </div>
+            </div>
         </div>
     );
 };  
