@@ -1,0 +1,11 @@
+# version: '3.8'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      tags:
+        - "smart-harbour-app:1.0.0"
+    container_name: smart-harbour-app-1
+    volumes:
+      - ./dist:/app/dist
