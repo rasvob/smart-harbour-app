@@ -129,6 +129,7 @@ const Home = () => {
     const token = useAuthStore((state) => state.token);
     const [dashboardData, setDashboardData] = useState({});
     const [cameraImage01, setCameraImage01] = useState('');
+    const [cameraImage02, setCameraImage02] = useState('');
     const { sendMessage, lastMessage,  readyState, sendJsonMessage } = useWebSocket(WS_URL, {
         shouldReconnect: (closeEvent) => true,
       });
@@ -164,8 +165,12 @@ const Home = () => {
             if (lastMessage.type === 'error') {
                 toast.error(lastMessage.message);
             } else if (lastMessage.type === 'message') {
-                setCameraImage01('data:image/jpeg;base64,'+JSON.parse(lastMessage.data).image);
-                console.log(JSON.parse(lastMessage.data).image);
+                if (JSON.parse(lastMessage.data).camera_id === 1) {
+                    setCameraImage01('data:image/jpeg;base64,'+JSON.parse(lastMessage.data).image);
+                } else {
+                    setCameraImage02('data:image/jpeg;base64,'+JSON.parse(lastMessage.data).image);
+                }
+
             }
         }
     }, [lastMessage]);
@@ -191,7 +196,7 @@ const Home = () => {
                 </div>
 
                 <div className="w-1/2 flex-col">
-                    {cameraImage01 && <img src={cameraImage01} alt="Camera 01" />} 
+                    {cameraImage02 && <img src={cameraImage02} alt="Camera 02" />} 
                 </div>
             </div>
         </div>
