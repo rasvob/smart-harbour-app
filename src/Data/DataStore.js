@@ -23,10 +23,10 @@ const prepareViewData = (data) => {
     return data.map((item) => {
         return {
             ...item,
-            'inflowTime': new Date(item.inflowTime).toLocaleString('cs-CZ'),
+            'inflowTime': item.inflowTime === null ? null : new Date(item.inflowTime).toLocaleString('cs-CZ'),
             'outflowTime': item.outflowTime === null ? null : new Date(item.outflowTime).toLocaleString('cs-CZ'),
             'inHarbour': item.outflowTime === null,
-            'timeInHarbour': item.outflowTime === null ? milisecondsToHoursAndMinutes(new Date() - new Date(item.inflowTime)) : milisecondsToHoursAndMinutes(new Date(item.outflowTime) - new Date(item.inflowTime)),
+            'timeInHarbour': item.outflowTime === null ? milisecondsToHoursAndMinutes(new Date('2024-08-31T12:00:00') - new Date(item.inflowTime)) : (item.inflowTime === null ? "-" : milisecondsToHoursAndMinutes(new Date(item.outflowTime) - new Date(item.inflowTime))),
         };
     }).sort((a, b) => b.id - a.id);
 };
